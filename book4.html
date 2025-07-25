@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Umaasa - Book</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fffbe7;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .story-container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .book-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .book-img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .clickable-word {
+      cursor: pointer;
+      border-bottom: 1px dotted #888;
+      color: inherit;
+    }
+
+    .clickable-word:hover {
+      background-color: #ffefc1;
+    }
+
+    .popup {
+      position: fixed;
+      background-color: white;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      z-index: 999;
+      max-width: 220px;
+    }
+
+    .popup-close {
+      text-align: right;
+      font-weight: bold;
+      cursor: pointer;
+      color: red;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #4caf50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      z-index: 9999;
+      opacity: 0;
+      animation: slideDown 0.5s ease forwards;
+    }
+
+    @keyframes slideDown {
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="story-container">
+  <div class="book-title">Umaasa</div>
+  <img src="book1.jpg" alt="Umaasa Book Cover" class="book-img" />
+
+  <p id="story-text">
+  minsan ang damdamin ay wag nalang ipag sabi subukan nalng itago ito at wag iparamdam sa taong gusto mo baka iparamdam niya dika niya gusto the end
+  </p>
+</div>
+
+<div id="toast" class="toast" style="display: none;">📖 Umaasa has been added to your history!</div>
+
+<div id="popup" class="popup" style="display: none;">
+  <div class="popup-close" onclick="closePopup()">×</div>
+  <div id="popup-text">Loading...</div>
+</div>
+
+<script>
+  const title = "Umaasa";
+  const image = "book1.jpg";
+  const start = Date.now();
+  const activeUser = localStorage.getItem("activeUser");
+  let users = JSON.parse(localStorage.getItem("users") || "{}");
+
+  const storyEl = document.getElementById("story-text");
+  const originalText = storyEl.innerText;
+
+  function makeWordsClickable(text) {
+    return text.split(/(\s+)/).map(word => {
+      if (word.trim() === "") return word;
+      const clean = word.replace(/[.,!?":;()]/g, "");
+      return `<span class="clickable-word" data-word="${clean}">${word}</span>`;
+    }).join("");
+  }
+
+  storyEl.innerHTML = makeWordsClickable(originalText);
+
+  document.querySelectorAll(".clickable-word").forEach(word => {
+    word.addEventListener("click", async (e) => {
+      const rawWord = e.target.dataset.word.toLowerCase();
+      const popup = document.getElementById("popup");
+      const popupText = document.getElementById("popup-text");
+
+      popupText.textContent = `Searching "${rawWord}"...`;
+      popup.style.display = "block";
+      popup.style.left = e.pageX + "px";
+      popup.style.top = (e.pageY - 60) + "px";
+
+      try {
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${rawWord}`);
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          const meaning = data[0]?.meanings[0]?.definitions[0]?.definition;
+          popupText.textContent = `"${rawWord}" means: ${meaning}`;
+        } else {
+          popupText.textContent = `No definition found for "${rawWord}".`;
+        }
+      } catch (error) {
+        popupText.textContent = `Error getting meaning.`;
+      }
+    });
+  });
+
+  function closePopup() {
+    document.getElementById("popup").style.display = "none";
+  }
+
+  setTimeout(() => {
+    const timeSpent = Date.now() - start;
+
+    if (timeSpent >= 20000 && activeUser && users[activeUser]) {
+      const userData = users[activeUser];
+      userData.booksRead = userData.booksRead || [];
+
+      const alreadyExists = userData.booksRead.some(book => book.title === title);
+      if (!alreadyExists) {
+        userData.booksRead.push({ title, image });
+        users[activeUser] = userData;
+        localStorage.setItem("users", JSON.stringify(users));
+
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => toast.remove(), 1000);
+        }, 3000);
+      }
+    }
+  }, 20000);
+
+  window.addEventListener("beforeunload", () => {
+    const end = Date.now();
+    const readingTime = end - start;
+
+    if (activeUser && users[activeUser]) {
+      users[activeUser].totalReadingTime = (users[activeUser].totalReadingTime || 0) + readingTime;
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Boxes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .box-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .box {
+      width: 180px;
+      height: 180px;
+      background-color: #ffe0b2;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .box:hover {
+      background-color: #ffc107;
+      transform: scale(1.05);
+    }
+
+    .box1 { background-color: #ff9999; }
+    .box2 { background-color: #90ee90; }
+    .box3 { background-color: #87cefa; }
+    .box4 { background-color: #d1c4e9; }
+
+    .back-button {
+      margin-top: 30px;
+    }
+
+    .back-button button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #7a2c87;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .back-button button:hover {
+      background-color: #5e1c68;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select a Category</h1>
+
+  <div class="box-container">
+    <div class="box box1" onclick="location.href='page1.html'">umaasa</div>
+    <div class="box box2" onclick="location.href='page2.html'">nagpaasa</div>
+    <div class="box box3" onclick="location.href='page3.html'">wala lang umasa
+    lang</div>
+    <div class="box box4" onclick="location.href='page4.html'">assuming rin
+    minsan</div>
+  </div>
+
+  <div class="back-button">
+    <button onclick="history.back()">← Back</button>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select a Book</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .box-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .box {
+      width: 180px;
+      height: 230px;
+      background-color: #fff8e1;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .box:hover {
+      transform: scale(1.05);
+      background-color: #ffe082;
+    }
+
+    .box img {
+      width: 100px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .box-title {
+      font-weight: bold;
+      text-align: center;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .back-button {
+      margin-top: 30px;
+    }
+
+    .back-button button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #7a2c87;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .back-button button:hover {
+      background-color: #5e1c68;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select a Book</h1>
+
+  <div class="box-container">
+    <div class="box" onclick="location.href='book1.html'">
+      <img src="book1.jpg" alt="Book 1">
+      <div class="box-title">Umaasa</div>
+    </div>
+    <div class="box" onclick="location.href='book2.html'">
+      <img src="book2.jpg" alt="Book 2">
+      <div class="box-title">Nagpaasa</div>
+    </div>
+    <div class="box" onclick="location.href='book3.html'">
+      <img src="book3.jpg" alt="Book 3">
+      <div class="box-title">Umasa Lang</div>
+    </div>
+    <div class="box" onclick="location.href='book4.html'">
+      <img src="book4.jpg" alt="Book 4">
+      <div class="box-title">Assuming Rin Minsan</div>
+    </div>
+  </div>
+
+  <div class="back-button">
+    <button onclick="history.back()">← Back</button>
+  </div>
+
+</body>
+</html>
